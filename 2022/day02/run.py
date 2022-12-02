@@ -1,6 +1,3 @@
-from functools import reduce
-
-
 def main():
     input_lines: list[str] = list()
     with open("input.txt", "r") as in_f:
@@ -10,9 +7,9 @@ def main():
         "A": "rock",
         "B": "paper",
         "C": "scissors",
-        "X": "rock",
-        "Y": "paper",
-        "Z": "scissors",
+        "X": "lost",
+        "Y": "draw",
+        "Z": "won",
     }
 
     points_map = {
@@ -25,16 +22,9 @@ def main():
     }
 
     my_points = 0
-    others_points = 0
     for choices in map(str.split, input_lines):
-        my_c = code_map[choices[1]]
+        my_outcome = code_map[choices[1]]
         oth_c = code_map[choices[0]]
-
-        # rock, paper, scissors logic -> who wins
-        if my_c == oth_c:
-            my_points += points_map["draw"] + points_map[my_c]
-            others_points += points_map["draw"] + points_map[oth_c]
-            continue
 
         logic_map = {
             ("rock", "rock"): "draw",
@@ -47,11 +37,11 @@ def main():
             ("scissors", "rock"): "lost",
             ("scissors", "paper"): "won",
         }
-        my_outcome = logic_map[(my_c, oth_c)]  # type: ignore
-        oth_outcome = logic_map[(oth_c, my_c)]  # type: ignore
 
-        my_points += points_map[my_outcome] + points_map[my_c]
-        others_points += points_map[oth_outcome] + points_map[oth_c]
+        for (mine, others), outcome in logic_map.items():
+            if outcome == my_outcome and others == oth_c:
+                my_points += points_map[my_outcome] + points_map[mine]
+                break
 
     print("my points:", my_points)
 
