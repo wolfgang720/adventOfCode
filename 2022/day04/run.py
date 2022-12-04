@@ -10,6 +10,8 @@ def main():
 
     # find pairs where one range encloses the other
     pairs_w_enclosed_rngs = list()
+    # find pairs that overlap at all
+    pairs_w_overlap_rngs = list()
     for r1, r2 in pairs:
         # r1 must be longer or equal
         if len(r1) < len(r2):
@@ -17,8 +19,13 @@ def main():
         if r1.start <= r2.start and r1.stop >= r2.stop:
             pairs_w_enclosed_rngs.append((r1, r2))
 
+        if r1.start > r2.start:
+            r1, r2 = r2, r1
+        if r1.stop >= r2.start:
+            pairs_w_overlap_rngs.append((r1, r2))
+
     print("Answer part 1:", len(pairs_w_enclosed_rngs))
-    print("Answer part 2:")
+    print("Answer part 2:", len(pairs_w_overlap_rngs))
 
 
 if __name__ == "__main__":
