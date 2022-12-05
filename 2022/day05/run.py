@@ -21,7 +21,6 @@ def main():
             if _crate == "":
                 continue
             stacks[col_idx].insert(0, _crate)
-    print(stacks)
 
     for line in input_lines[first_moves_line:]:
         m = re.fullmatch(r"move (\d+) from (\d+) to (\d+)", line)
@@ -29,10 +28,10 @@ def main():
 
         moved = stacks[fr - 1][-n:]
         stacks[fr - 1] = stacks[fr - 1][:-n]
-        stacks[to - 1].extend(reversed(moved))
+        stacks[to - 1].extend(moved)
 
-    print("Answer part 1:", "".join((s[-1] for s in stacks)))
-    print("Answer part 2:")
+    print("Answer part 1:")
+    print("Answer part 2:", "".join((s[-1] for s in stacks)))
 
 
 if __name__ == "__main__":
