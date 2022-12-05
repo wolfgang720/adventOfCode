@@ -24,6 +24,9 @@ def main():
 
     for line in input_lines[first_moves_line:]:
         m = re.fullmatch(r"move (\d+) from (\d+) to (\d+)", line)
+        if m is None:
+            print(line, "is invalid")
+            continue
         n, fr, to = map(int, m.groups())
 
         moved = stacks[fr - 1][-n:]
