@@ -3,7 +3,7 @@ def main():
     with open("input.txt", "r") as in_f:
         input_str = in_f.read()
 
-    MARKER_LEN = 4
+    MARKER_LEN = 14
     marker = input_str[:MARKER_LEN]
     marker_idxs = list()
     for i, c in enumerate(input_str[MARKER_LEN:]):
