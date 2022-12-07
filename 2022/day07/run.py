@@ -38,9 +38,14 @@ def main():
             dirs["/".join(cur_path)][0].append((int(size), name))
 
     dir_sizes = dict()
+    total_size = 0
     for path, (files, ds) in dirs.items():
 
         this_dir_file_sizes = reduce(lambda s, x: s + x[0], files, 0)
+        total_size += this_dir_file_sizes
+
+        if path == "":
+            continue
 
         pparts = path.split("/")
         for x in range(len(pparts) + 1):
@@ -48,18 +53,22 @@ def main():
             if ppath not in dir_sizes:
                 dir_sizes[ppath] = 0
             dir_sizes[ppath] += this_dir_file_sizes
-        dir_sizes[""] += this_dir_file_sizes
         for d in ds:
             if d not in dir_sizes:
                 dir_sizes[d] = 0
 
-    # print([s for d, s in dir_sizes.items() if s <= 100000])
-
+    dir_sizes[""] = total_size
     size1 = reduce(lambda s, x: s + x, (s for s in dir_sizes.values() if s <= 100000), 0)
 
-    print(dirs)
+    print("all", dir_sizes[""])
+    free_space = 70000000 - dir_sizes[""]
+    print("free", free_space)
+    del_needed = 30000000 - free_space
+    print("del needed", del_needed)
+    smallest_sufficient_del = sorted((s for s in dir_sizes.values() if s >= del_needed))[0]
+
     print("Answer part 1:", size1)
-    print("Answer part 2:")
+    print("Answer part 2:", smallest_sufficient_del)
 
 
 if __name__ == "__main__":
