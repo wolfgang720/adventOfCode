@@ -35,21 +35,23 @@ def main():
         input_lines = list(map(str.strip, in_f.readlines()))
 
     start_pos = (0, 0)
-    head_pos = start_pos
+    rope = [start_pos for _ in range(10)]
+    print(rope)
     all_tail_pos: list[tuple[int, int]] = [start_pos]
 
     for line in input_lines:
         m = re.fullmatch(r"([UDLR]+)\s(\d+)", line)
         direction, distance = m.groups()
         for _ in range(int(distance)):
-            head_pos = move_head(head_pos, direction)
-            all_tail_pos.append(move_tail(head_pos, all_tail_pos[-1]))
+            new_rope = [move_head(rope[0], direction)]
+            for idx, knot in enumerate(rope[1:]):
+                new_rope.append(move_tail(new_rope[idx], knot))
+            all_tail_pos.append(new_rope[-1])
+            rope = new_rope
 
     aw1 = len(set(all_tail_pos))
-    aw2 = ""
 
-    print("Answer part 1:", aw1)
-    print("Answer part 2:", aw2)
+    print("Answer:", aw1)
 
 
 if __name__ == "__main__":
