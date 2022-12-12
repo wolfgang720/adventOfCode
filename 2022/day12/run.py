@@ -34,11 +34,14 @@ def main():
     # abdefghi""".split(
     #         "\n"
     #     )
+    all_a_pos = list()
     start_pos = (-1, -1)
     end_pos = (-1, -1)
     graph = dict()
     for y, row in enumerate(input_lines):
         for x, elev in enumerate(row):
+            if elev in ("a", "S"):
+                all_a_pos.append((x, y))
             if elev == "S":
                 start_pos = (x, y)
             elif elev == "E":
@@ -47,34 +50,37 @@ def main():
 
     print(graph[(0, 0)])
 
-    # find shortest path
-    visited_nodes = {graph[start_pos][0]}
-    paths = [[start_pos]]
-
-    complete_paths = list()
-
     # path
     # - list of nodes
-    # - cost
-    visited_cnt = 0
-    while len(visited_nodes) != visited_cnt:
-        visited_cnt = len(visited_nodes)
+    def find_shortest_path(graph, start_pos, is_end):
+        # find shortest path
+        visited_nodes = {graph[start_pos][0]}
+        paths = [[start_pos]]
 
-        new_paths = list()
-        for path in paths:
-            for nxt_node in graph[path[-1]]:
-                nxt_pos = nxt_node[0]
-                if nxt_pos == end_pos:
-                    complete_paths.append(path + [nxt_pos])
-                if nxt_pos not in visited_nodes:
-                    new_paths.append(path + [nxt_pos])
-                visited_nodes.add(nxt_pos)
-        paths = new_paths
+        complete_paths = list()
+        visited_cnt = 0
+        while len(visited_nodes) != visited_cnt:
+            visited_cnt = len(visited_nodes)
 
-    print([len(cp) - 1 for cp in complete_paths])
+            new_paths = list()
+            for path in paths:
+                for nxt_node in graph[path[-1]]:
+                    nxt_pos = nxt_node[0]
+                    if is_end(nxt_pos):
+                        complete_paths.append(path + [nxt_pos])
+                    if nxt_pos not in visited_nodes:
+                        new_paths.append(path + [nxt_pos])
+                    visited_nodes.add(nxt_pos)
+            paths = new_paths
+        return sorted(complete_paths, key=lambda p: len(p))[0] if complete_paths else list()
 
-    print("Answer part 1:")
-    print("Answer part 2:")
+    all_shortest = filter(
+        lambda x: x > 0,
+        (len(find_shortest_path(graph, a_start, lambda pos: pos == end_pos)) - 1 for a_start in all_a_pos),
+    )
+
+    print("Answer part 1:", len(find_shortest_path(graph, start_pos, lambda pos: pos == end_pos)) - 1)
+    print("Answer part 2:", min(all_shortest))
 
 
 if __name__ == "__main__":
