@@ -58,8 +58,20 @@ def main():
         if is_in_order:
             sum_idx += pair_idx + 1
 
+    # sort all packets
+    packet_list = [[[2]], [[6]]] + [eval(l) for l in filter(None, input_lines.split("\n"))]
+    sorts = 1
+    while sorts > 0:
+        sorts = 0
+        for i in range(len(packet_list) - 1):
+            if not check_order_of_lists(packet_list[i], packet_list[i + 1]):
+                swp = packet_list[i] if type(packet_list[i]) is int else packet_list[i].copy()
+                packet_list[i] = packet_list[i + 1] if type(packet_list[i + 1]) is int else packet_list[i + 1].copy()
+                packet_list[i + 1] = swp
+                sorts += 1
+
     print("Answer part 1:", sum_idx)
-    print("Answer part 2:")
+    print("Answer part 2:", (packet_list.index([[2]]) + 1) * (packet_list.index([[6]]) + 1))
 
 
 if __name__ == "__main__":
