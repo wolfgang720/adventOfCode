@@ -13,11 +13,10 @@ def main():
     input_lines = ""
     with open("input.txt", "r") as in_f:
         input_lines = in_f.readlines()
-        # input_lines = in_f.read()
-    #     input_lines = """498,4 -> 498,6 -> 496,6
-    # 503,4 -> 502,4 -> 502,9 -> 494,9""".split(
-    #         "\n"
-    #     )
+    input_lines = """498,4 -> 498,6 -> 496,6
+503,4 -> 502,4 -> 502,9 -> 494,9""".split(
+        "\n"
+    )
 
     geology = dict()
     for line in input_lines:
@@ -38,13 +37,8 @@ def main():
 
     def let_sand_fall(start_pos, max_y):
         sx, sy = start_pos
-        c = 0
         while True:
-            # if c > 10:
-            #     break
-            if sy >= max_y:
-                return None
-            elif (sx, sy + 1) not in geology:
+            if (sx, sy + 1) not in geology:
                 sy = sy + 1
             elif (sx - 1, sy + 1) not in geology:
                 sx, sy = sx - 1, sy + 1
@@ -52,19 +46,21 @@ def main():
                 sx, sy = sx + 1, sy + 1
             else:
                 return (sx, sy)
+            if sy + 1 >= max_y + 2:
+                return (sx, sy)
 
     max_y = max((f[1] for f in geology))
     sand_cnt = 0
     while True:
         new_sand_pos = let_sand_fall((500, 0), max_y)
-        if new_sand_pos is None:
+        if new_sand_pos == (500, 0):
             break
         geology[new_sand_pos] = "O"
         sand_cnt += 1
 
     print_field(geology)
 
-    print("Answer part 1:", sand_cnt)
+    print("Answer part 1:", sand_cnt + 1)
     print("Answer part 2:")
 
 
