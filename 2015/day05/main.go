@@ -23,38 +23,39 @@ func main() {
 	lines := strings.Split(content, "\n")
 
 	var naughtyCnt, goodCnt uint16
-	badStrs := [...]string{"ab", "cd", "pq", "xy"}
-	vowels := "aeiou"
 
 	for _, line := range lines {
 		if line == "" {
 			continue
 		}
 		var (
-			prev      rune
-			vowelsCnt uint8
-			doubles   bool
-			hasBadStr bool
+			repAfterTwo bool
+			hasDouble   bool
 		)
+		substrs := make(map[string]int)
 
-		for _, c := range line {
-			if strings.ContainsRune(vowels, c) {
-				vowelsCnt += 1
+		substrs[line[0:2]] = 1
+		for i, c := range line {
+			prevIdx := i - 2
+			if prevIdx >= 0 && c == rune(line[prevIdx]) {
+				repAfterTwo = true
 			}
-			if c == prev {
-				doubles = true
+			if i > 0 {
+				substr := line[i-1 : i+1]
+				lastSubstrIdx := substrs[substr]
+				if lastSubstrIdx < (i - 1) {
+					if lastSubstrIdx != 0 {
+						hasDouble = true
+						fmt.Println(substr, lastSubstrIdx, i-1)
+					} else {
+						substrs[substr] = i
+					}
+				}
 			}
-			prev = c
 		}
-		for _, badStr := range badStrs {
-			if strings.Contains(line, badStr) {
-				hasBadStr = true
-				break
-			}
-		}
-		if hasBadStr || !doubles || vowelsCnt < 3 {
+		if !repAfterTwo || !hasDouble {
 			naughtyCnt += 1
-			fmt.Println(hasBadStr, doubles, vowelsCnt)
+			// fmt.Println(repAfterTwo, hasDouble)
 		} else {
 			goodCnt += 1
 		}
