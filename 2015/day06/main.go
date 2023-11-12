@@ -27,24 +27,29 @@ func main() {
 	}
 	lines := strings.Split(content, "\n")
 
-	grid := [1000][1000]bool{}
-	var onCnt uint64
+	grid := [1000][1000]uint{}
+	var brightnessCnt uint64
 
 	for lnum, line := range lines {
 		action, rectangle := parseInstruction(line)
 		fmt.Println(action, " | ", rectangle)
 
-		f := func(in bool) bool {
+		f := func(in uint) uint {
 			fmt.Println(lnum, "Error reading action", action)
 			return in
 		}
 		switch action {
 		case "turn on":
-			f = func(in bool) bool { return true }
+			f = func(in uint) uint { return in + 1 }
 		case "turn off":
-			f = func(in bool) bool { return false }
+			f = func(in uint) uint {
+				if in > 1 {
+					return in - 1
+				}
+				return 0
+			}
 		case "toggle":
-			f = func(in bool) bool { return !in }
+			f = func(in uint) uint { return in + 2 }
 		}
 
 		var x1, y1, x2, y2 uint16
@@ -65,17 +70,12 @@ func main() {
 				out := f(in)
 				grid[row][col] = out
 
-				if !in && out {
-					onCnt += 1
-				}
-				if in && !out {
-					onCnt -= 1
-				}
+				brightnessCnt = brightnessCnt - uint64(in) + uint64(out)
 			}
 		}
 
 	}
-	fmt.Println("on:", onCnt)
+	fmt.Println("total brightness:", brightnessCnt)
 
 }
 
