@@ -42,6 +42,9 @@ func main() {
 		fmt.Println(key, value)
 	}
 
+	// signal on wire "a" in part 1 was 956
+	circuit["b"] = Gate{gateStrs: circuit["b"].gateStrs, output: 956, outputValid: true}
+
 	outputOfA := calcGateOutput(&circuit, circuit["a"])
 	fmt.Println("Output of wir a:", outputOfA)
 }
