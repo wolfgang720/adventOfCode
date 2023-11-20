@@ -25,6 +25,11 @@ func main() {
 
 	var totalCntMem uint64 = 0
 	var totalCntChars uint64 = 0
+	var totalCntEnc uint64 = 0
+
+	// \"   ->  \\"
+	// \\   ->  \\\\
+	// \x27 ->  \\x27
 
 	for _, line := range lines {
 		lineCntMem := uint64(utf8.RuneCountInString(line))
@@ -53,11 +58,13 @@ func main() {
 				fmt.Println("error", strPart)
 			}
 		}
+		totalCntEnc += (lineCntMem + uint64(strings.Count(line, "\\")) + uint64(strings.Count(line, "\"")) + 2)
 	}
 
 	// do not count enclosing double quotes
 	totalCntChars -= uint64(len(lines) * 2)
 
 	fmt.Println("total:", totalCntMem, totalCntChars, "diff:", totalCntMem-totalCntChars)
+	fmt.Println("total:", totalCntMem, totalCntEnc, "diff:", totalCntEnc-totalCntMem)
 
 }
