@@ -50,7 +50,7 @@ func main() {
 	}
 
 	citiesCnt := len(cities)
-	var minDist uint64
+	var maxDist uint64
 	for _, path := range combin.Permutations(citiesCnt, citiesCnt) {
 		_src := cities[path[0]]
 		var pathDist uint64
@@ -59,10 +59,10 @@ func main() {
 			pathDist += uint64(ways[CityPair{_src, _dest}])
 			_src = _dest
 		}
-		if minDist == 0 || pathDist < minDist {
-			minDist = pathDist
+		if pathDist > maxDist {
+			maxDist = pathDist
 		}
 	}
-	fmt.Println("min path:", minDist)
+	fmt.Println("max path:", maxDist)
 
 }
