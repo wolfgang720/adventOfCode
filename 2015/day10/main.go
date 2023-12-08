@@ -22,7 +22,7 @@ func main() {
 		cnt uint16
 	}
 
-	for its := range [40]int{} {
+	for its := range [50]int{} {
 		// count number of subsequently equal runes
 		records := []NumsRecord{}
 		currentR := input[0]
