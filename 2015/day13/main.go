@@ -40,7 +40,7 @@ func main() {
 	lines := strings.Split(content, "\n")
 
 	happinesses := make(map[Pair]int)
-	var people []string
+	var people []string = []string{"me"}
 	for _, line := range lines {
 		elems := strings.Split(line, " ")
 
@@ -57,9 +57,11 @@ func main() {
 		}
 		if !slices.Contains(people, pair.who) {
 			people = append(people, pair.who)
+			happinesses[newSortedPair("me", pair.who)] = 0
 		}
 		if !slices.Contains(people, pair.with) {
 			people = append(people, pair.with)
+			happinesses[newSortedPair("me", pair.with)] = 0
 		}
 	}
 
