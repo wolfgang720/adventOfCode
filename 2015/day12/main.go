@@ -27,8 +27,10 @@ func parseChildren(input interface{}) int {
 	case map[string]interface{}:
 		fmt.Println("object")
 		for _, v := range _input {
-			// numbersCnt += parseChildren(k)
 			numbersCnt += parseChildren(v)
+			if v == "red" {
+				return 0
+			}
 		}
 		return numbersCnt
 	case string:
