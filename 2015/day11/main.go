@@ -73,11 +73,12 @@ func validatePassword(password []rune) bool {
 
 func main() {
 	password := []rune("hepxcrrq")
-	for i := 0; true; i++ {
+	pwdCnt := 0
+	for i := 0; pwdCnt < 2; i++ {
 		password = calcNextPassword(password)
 		if validatePassword(password) {
 			fmt.Println("newpassword:", string(password), "index:", i)
-			break
+			pwdCnt += 1
 		}
 	}
 
