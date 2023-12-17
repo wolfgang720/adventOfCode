@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -17,8 +16,10 @@ func readInputFile() (string, error) {
 }
 
 type Reindeer struct {
-	speed, durationSec, restSec float64
+	speed, durationSec, restSec uint64
 	name                        string
+	distance                    uint64
+	points                      uint64
 }
 
 func main() {
@@ -29,33 +30,51 @@ func main() {
 	}
 	lines := strings.Split(content, "\n")
 
-	const raceDurS = 2503
-	// reindeer := []Reindeer{}
-	maxDist := 0.0
+	const raceDurS = uint64(2503)
+	reindeer := []Reindeer{}
+
 	for _, line := range lines {
 		_p := strings.Split(line, " ")
-		_speed, _ := strconv.ParseFloat(_p[3], 64)
-		_durS, _ := strconv.ParseFloat(_p[6], 64)
-		_restS, _ := strconv.ParseFloat(_p[13], 64)
+		_speed, _ := strconv.ParseUint(_p[3], 10, 64)
+		_durS, _ := strconv.ParseUint(_p[6], 10, 64)
+		_restS, _ := strconv.ParseUint(_p[13], 10, 64)
 		_name := _p[0]
-		// newReindeer := Reindeer{speed: _speed, durationSec: _durS, restSec: _restS, name: _name}
-
-		sprintD := _speed * _durS
-		cycleLen := _durS + _restS
-
-		dist := math.Floor(raceDurS/cycleLen) * sprintD
-		_r := math.Mod(raceDurS, cycleLen)
-		if _r >= _durS {
-			dist += sprintD
-		} else {
-			dist += _r * _speed
-		}
-		fmt.Println(_name, dist)
-		if dist > maxDist {
-			maxDist = dist
-		}
-		// reindeer = append(reindeer, newReindeer)
+		reindeer = append(reindeer, Reindeer{speed: _speed, durationSec: _durS, restSec: _restS, name: _name})
 	}
-	fmt.Println(maxDist)
 
+	// reindeer = append(reindeer, Reindeer{name: "Dancer", speed: 16, durationSec: 11, restSec: 162})
+	// reindeer = append(reindeer, Reindeer{name: "Comet", speed: 14, durationSec: 10, restSec: 127})
+
+	for sec := uint64(0); sec < raceDurS; sec++ {
+		leadingDist := uint64(0)
+		for ridx, r := range reindeer {
+			cycleSec := r.durationSec + r.restSec
+			newDistance := r.distance
+			if sec%cycleSec < r.durationSec {
+				// currently running
+				// fmt.Println(sec, cycleSec, sec%cycleSec, r.speed)
+				newDistance = r.distance + r.speed
+			}
+			reindeer[ridx].distance = newDistance
+			if newDistance >= leadingDist {
+				leadingDist = newDistance
+			}
+		}
+		for ridx, r := range reindeer {
+			if r.distance == leadingDist {
+				reindeer[ridx].points = r.points + 1
+			}
+		}
+	}
+
+	var mostPoints = uint64(0)
+	for _, r := range reindeer[1:] {
+		fmt.Println(r, r.points, mostPoints)
+		if r.points > mostPoints {
+			mostPoints = r.points
+		}
+	}
+
+	fmt.Println(reindeer)
+	fmt.Println(mostPoints)
 }
