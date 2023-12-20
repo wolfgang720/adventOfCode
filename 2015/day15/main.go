@@ -42,6 +42,10 @@ func main() {
 		for i2 := 0; i2 <= 100-i1; i2++ {
 			for i3 := 0; i3 <= 100-i1-i2; i3++ {
 				for i4 := 0; i4 <= 100-i1-i2-i3; i4++ {
+					if i1*ings[0].calories+i2*ings[1].calories+i3*ings[2].calories+i4*ings[3].calories != 500 {
+						continue
+					}
+
 					capa := max(0, i1*ings[0].capacity+i2*ings[1].capacity+i3*ings[2].capacity+i4*ings[3].capacity)
 					dura := max(0, i1*ings[0].durabiltiy+i2*ings[1].durabiltiy+i3*ings[2].durabiltiy+i4*ings[3].durabiltiy)
 					flav := max(0, i1*ings[0].flavour+i2*ings[1].flavour+i3*ings[2].flavour+i4*ings[3].flavour)
