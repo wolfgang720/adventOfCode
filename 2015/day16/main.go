@@ -44,8 +44,19 @@ auntsloop:
 	for idx, aunt := range aunts {
 
 		for auntcomp, val := range aunt {
-			if val != compounds[auntcomp] {
-				continue auntsloop
+			switch auntcomp {
+			case "cats", "trees":
+				if !(val > compounds[auntcomp]) {
+					continue auntsloop
+				}
+			case "pomeranians", "goldfish":
+				if !(val < compounds[auntcomp]) {
+					continue auntsloop
+				}
+			default:
+				if val != compounds[auntcomp] {
+					continue auntsloop
+				}
 			}
 		}
 		fmt.Println(idx, aunt)
